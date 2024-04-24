@@ -1,0 +1,112 @@
+{
+  "log": {
+    "disabled": false,
+    "level": "info",
+    "output": "$singbox-log",
+    "timestamp": true
+  },
+
+  "dns": {
+    "servers": [      
+      {
+        "tag": "dns_resolver",
+        "address": "220.110.210.114"
+      
+      },
+      {
+        "tag": "dns_proxy",
+        "address": "https://1.1.1.1/dns-query"
+
+      }
+    ],
+    "rules": [
+      {
+        "inbound": [
+          "mixed-in"
+        ],
+        "ip_version": 4,
+        "network": "tcp",
+        "auth_user": [
+          "nodoka"
+        ],
+        "protocol": [
+          "tls",
+          "http",
+          "quic"
+        ],
+	"server": "dns_resolver"
+      }
+    ],
+    "final": "dns_proxy",
+    "strategy": "",
+    "disable_cache": false,
+    "disable_expire": false,
+    "independent_cache": false,
+    "reverse_mapping": false,
+    "fakeip": {}
+  }, 
+  
+  "inbounds": [
+    {
+      "type": "hysteria2",
+      "listen": "::",
+      "listen_port": 443,
+      "users": [
+        {
+          "name": "$usrname",
+          "password": "$usrpassword"
+        }
+      ],
+      "tls": {
+        "enabled": true,
+        "server_name": "::",
+        "key_path": "$keypath",
+        "certificate_path": "$fullchainpath"
+      },
+      "masquerade": "http://127.0.0.1:80"
+    }
+  ],
+  
+  "outbounds": [
+    {
+      "type": "direct",
+      "tag": "direct"
+    },
+    {
+      "type": "block",
+      "tag": "block"
+    }
+  ],
+
+  "route": {
+
+    "rules": [
+      {
+        "rule_set": "geosite-category-ads-all",
+        "outbound": "block"
+      }
+    ],
+
+    "rule_set": [
+      {
+        "tag": "geosite-category-ads-all",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-category-ads-all.srs",
+        "download_detour": "direct"
+      },
+      {
+        "tag": "geosite-cn",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-cn.srs",
+        "download_detour": "direct"
+      }
+    ],
+
+    "auto_detect_interface": true,
+    "final": "direct"
+  },
+
+  "experimental": {}
+}
