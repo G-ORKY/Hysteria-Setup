@@ -1,4 +1,5 @@
 #!/bin/bash
+echo "Please insert the path that you want to install and set up sing-box in:"
 read installationpath
 
 rm -r $installationpath/Hysteria
@@ -10,8 +11,6 @@ mkdir $installationpath/Hysteria/site #The site to redirect to when hysteria aut
 touch $installationpath/Hysteria/installation.log
 # the log file that will be created to record the installation results and errors,
 # btw installation.log can be manually deleted
-touch $installationpath/Hysteria/config/hysteria.json
-touch $installationpath/Hysteria/site/index.html
 
 usrtype=$(whoami)
 if usrtype=="root";
@@ -28,14 +27,29 @@ then
 
     if [ $version = "ubuntu" ] || [ $version = "debian" ]; 
     then
-        apt install nginx
         apt update
+        apt install nginx
         apt upgrade curl && apt install curl
+        #update basic modules
 
         bash <(curl -fsSL https://sing-box.app/deb-install.sh)
         echo "sing-box core installed" >> ~/Hysteria/installation.log
+        #install sing-box core
 
-        
+        wget -P $installationpath/Hysteria/config/ https://github.com/G-ORKY/Proxy-server-initiallizer/blob/main/Hysteriaconfig.json
+        wget -P $installationpath/Hysteria/site/ https://github.com/G-ORKY/Proxy-server-initiallizer/blob/main/re.html
+        #download the configuration file and the site to redirect to when hysteria authentication is failed
+
+        echo "Choose the path you want to put your log file in, or leave it empty to use the default path($logpath):"
+        read logpath
+        if $logpath=="";
+        then
+            $logpath=$installationpath/Hysteria/config/Hysteriaconfig.json
+            sed -i s/!singbox-log/$logpath/g $installationpath/Hysteria/config/Hysteriaconfig.json
+        else
+            sed -i s/!singbox-log/$logpath/g $installationpath/Hysteria/config/Hysteriaconfig.json
+        fi
+
 
 
     else
