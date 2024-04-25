@@ -53,15 +53,15 @@
       "listen_port": 443,
       "users": [
         {
-          "name": "$usrname",
-          "password": "$usrpassword"
+          "name": "!usrname",
+          "password": "!usrpassword"
         }
       ],
       "tls": {
         "enabled": true,
         "server_name": "::",
-        "key_path": "$keypath",
-        "certificate_path": "$fullchainpath"
+        "key_path": "!keypath",
+        "certificate_path": "!fullchainpath"
       },
       "masquerade": "http://127.0.0.1:80"
     }

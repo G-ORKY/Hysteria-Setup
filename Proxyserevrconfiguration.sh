@@ -1,12 +1,19 @@
 #!/bin/bash
-echo "Please insert the path that you want to install and set up sing-box in:"
+echo "Please type the path that you want to install and set up sing-box in:"
 read installationpath
 
-rm -r $installationpath/Hysteria
+echo "Please type the domain used on this server as the proxy server name:"
+read servername
+
+rm -r $installationpath/Hysteria #remove the previous installation if exists
 mkdir $installationpath/Hysteria
+
 mkdir $installationpath/Hysteria/cert
+$certpath=$installationpath/Hysteria/cert
+
 mkdir $installationpath/Hysteria/config
 mkdir $installationpath/Hysteria/site #The site to redirect to when hysteria authentication is failed
+$sitepath=$installationpath/Hysteria/site
 
 touch $installationpath/Hysteria/installation.log
 # the log file that will be created to record the installation results and errors,
@@ -38,6 +45,7 @@ then
 
         wget -P $installationpath/Hysteria/config/ https://github.com/G-ORKY/Proxy-server-initiallizer/blob/main/Hysteriaconfig.json
         wget -P $installationpath/Hysteria/site/ https://github.com/G-ORKY/Proxy-server-initiallizer/blob/main/re.html
+        chmod +777 $installationpath/Hysteria/site/re.html
         #download the configuration file and the site to redirect to when hysteria authentication is failed
 
         echo "Choose the path you want to put your log file in, or leave it empty to use the default path($logpath):"
@@ -50,8 +58,28 @@ then
             sed -i s/!singbox-log/$logpath/g $installationpath/Hysteria/config/Hysteriaconfig.json
         fi
 
+        echo "Choose username you want to use:"
+        read username
+        sed -i s/!usrname/$username/g $installationpath/Hysteria/config/Hysteriaconfig.json
 
+        echo "Enterthe password you want to use:"
+        read password
+        sed -i s/!usrpassword/$password/g $installationpath/Hysteria/config/Hysteriaconfig.json
 
+        wget -O -  https://get.acme.sh | sh
+        . .bashrc
+        acme.sh --upgrade --auto-upgrade
+        #install and turn on the auto upgrade for acme.sh
+
+        # sed -i '/http{/a\server{' /etc/nginx/nginx.conf
+        # sed -i /http{/a\\listen 80;\ /etc/nginx/nginx.conf
+        # sed -i /http{/a\\server_name $servername;\ /etc/nginx/nginx.conf
+        # sed -i /http{/a\\root $sitepath;\ /etc/nginx/nginx.conf
+        # sed -i /http{/a\\index re.html;\ /etc/nginx/nginx.conf
+        # sed -i /http{/a\\} /etc/nginx/nginx.conf
+
+        
+        
     else
         echo "This script is currently not supported on your OS, please contact us to request support for your OS."
     fi
