@@ -1,4 +1,5 @@
-！！！Only for the server with out any deployed nginx server, cause this script will replace the nginx.conf in convenience.
+
+:computer: ！！！Only for the server without any deployed nginx server, cause this script will replace the nginx.conf in convenience.
 
 PLEASE!!PLEASE!!remenber to backup your original nginx.conf if you have the demand!
 
