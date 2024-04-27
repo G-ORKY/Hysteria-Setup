@@ -75,65 +75,61 @@ then
         #set the password in the configuration file
 
         wget -P /home/$usr -O -  https://get.acme.sh | sh
+
         . .bashrc
-        sacme=$(/home/$usr/.acme.sh/acme.sh)
-        if $sacme=="-bash: acme.sh: command not found";
+
+        /home/$usr/.acme.sh/acme.sh --upgrade --auto-upgrade
+        #install and turn on the auto upgrade for acme.sh
+
+        echo "Choose the option you want to use to obtain the certificate :"
+        echo "1."I have the site privious run on this server!""
+        echo "2."I have the domain but it is not related to any site on this server and I AGREE to use the default site!""
+        echo " "
+        echo "Option 2 will replace the privious nginx.conf file, so if you have any custom configuration, please choose option 1 or make sure that you have the backup of the nginx.conf and you need to re-add your privious config after configuration!!!"
+        
+        read siteoption
+        if $siteoption=="1"
         then
-            echo "Failed to install acme.sh, please manually run 'wget -O -  https://get.acme.sh/ | sh' to see the detailed error."
+            echo "Use the privious site to obtain a certificate"
         else
-            /home/$usr/.acme.sh/acme.sh --upgrade --auto-upgrade
-            #install and turn on the auto upgrade for acme.sh
-
-            echo "Choose the option you want to use to obtain the certificate :"
-            echo "1."I have the site privious run on this server!""
-            echo "2."I have the domain but it is not related to any site on this server and I AGREE to use the default site!""
-            echo " "
-            echo "Option 2 will replace the privious nginx.conf file, so if you have any custom configuration, please choose option 1 or make sure that you have the backup of the nginx.conf and you need to re-add your privious config after configuration!!!"
-            
-            read siteoption
-            if $siteoption=="1"
-            then
-                echo "Use the privious site to obtain a certificate"
-            else
-                rm -f /etc/nginx/nginx.comf
-                wget -P /etc/nginx/nginx.conf "https://raw.githubusercontent.com/G-ORKY/Proxy-server-initiallizer/main/nginx.conf"
-            fi
-
-            sed -i s/!servername!/$servername/g /etc/nginx/nginx.conf
-            sed -i s/!sitepath!/$sitepath/g /etc/nginx/nginx.conf
-
-            deploystate=$(/home/$usr/.acme.sh/acme.sh --issue --server letsencrypt --test -d $servername -w $sitepath --keylength ec-256)
-            echo $deploystate >> $installationpath/Hysteria/installation.log
-
-            testoutcome=$(cat $installationpath/Hysteria/installation.log | grep 'error')
-            if $testoutcome=="error";
-            then
-                echo "Failed to obtain the certificate, please check the log file for more details."
-            else
-                /home/$usr/.acme.sh/acme.sh --set-default-ca --server letsencrypt
-                /home/$usr/.acme.sh/acme.sh --issue -d $servername -w $sitepath --keylength ec-256 --force
-                /home/$usr/.acme.sh/acme.sh --installcert -d $servername  --key-file /$certpath/$servername.key --fullchain-file /$certpath/$servername.crt --ecc
-            fi
-
-            chmod +r /$certpath/$servername.key
-
-            wget -P $certpath https://raw.githubusercontent.com/G-ORKY/Proxy-server-initiallizer/main/certrenew.sh
-            sed -i s#!homepath#home/$usr#g $certpath/certrenew.sh
-            sed -i s#!servername#$servername#g $certpath/certrenew.sh
-            sed -i s#!certpath#$certpath#g $certpath/certrenew.sh
-            sed -i s#!installationpath#$installationpath#g $certpath/certrenew.sh
-
-            chmod +x $certpath/certrenew.sh
-
-            echo "Congratulations! All done! Please enter your password to start the sing-box. Feel free to use your proxy server!"
-            echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-            echo "Please remember to add the crontab to renew the certificate automatically, you can use the following command to add the crontab:"
-            echo "# 1:00am, 1st day each month, run `certrenew.sh`"
-            echo "0 1 1 * *   bash $certpath/certrenew.sh"
-
-            sudo sing-box run -c $installationpath/config/Hysteriaconfig.json
-
+            rm -f /etc/nginx/nginx.comf
+            wget -P /etc/nginx/nginx.conf "https://raw.githubusercontent.com/G-ORKY/Proxy-server-initiallizer/main/nginx.conf"
         fi
+
+        sed -i s/!servername!/$servername/g /etc/nginx/nginx.conf
+        sed -i s/!sitepath!/$sitepath/g /etc/nginx/nginx.conf
+
+        deploystate=$(/home/$usr/.acme.sh/acme.sh --issue --server letsencrypt --test -d $servername -w $sitepath --keylength ec-256)
+        echo $deploystate >> $installationpath/Hysteria/installation.log
+
+        testoutcome=$(cat $installationpath/Hysteria/installation.log | grep 'error')
+        if $testoutcome=="error";
+        then
+            echo "Failed to obtain the certificate, please check the log file for more details."
+        else
+            /home/$usr/.acme.sh/acme.sh --set-default-ca --server letsencrypt
+            /home/$usr/.acme.sh/acme.sh --issue -d $servername -w $sitepath --keylength ec-256 --force
+            /home/$usr/.acme.sh/acme.sh --installcert -d $servername  --key-file /$certpath/$servername.key --fullchain-file /$certpath/$servername.crt --ecc
+        fi
+
+        chmod +r /$certpath/$servername.key
+
+        wget -P $certpath https://raw.githubusercontent.com/G-ORKY/Proxy-server-initiallizer/main/certrenew.sh
+        sed -i s#!homepath#home/$usr#g $certpath/certrenew.sh
+        sed -i s#!servername#$servername#g $certpath/certrenew.sh
+        sed -i s#!certpath#$certpath#g $certpath/certrenew.sh
+        sed -i s#!installationpath#$installationpath#g $certpath/certrenew.sh
+
+        chmod +x $certpath/certrenew.sh
+
+        echo "Congratulations! All done! Please enter your password to start the sing-box. Feel free to use your proxy server!"
+        echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+        echo "Please remember to add the crontab to renew the certificate automatically, you can use the following command to add the crontab:"
+        echo "# 1:00am, 1st day each month, run `certrenew.sh`"
+        echo "0 1 1 * *   bash $certpath/certrenew.sh"
+
+        sudo sing-box run -c $installationpath/config/Hysteriaconfig.json
+
     else
         echo "This script is currently not supported on your OS, please contact us to request support for your OS."
     fi
