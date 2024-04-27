@@ -74,17 +74,14 @@ then
         sed -i s/!usrpassword/$password/g $installationpath/Hysteria/config/Hysteriaconfig.json
         #set the password in the configuration file
 
-        su $usr
-        cd ~
-
-        wget -O -  https://get.acme.sh | sh
+        wget -P /home/$usr -O -  https://get.acme.sh | sh
         . .bashrc
-        sacme=$(acme.sh)
+        sacme=$(/home/$usr/.acme.sh/acme.sh)
         if $sacme=="-bash: acme.sh: command not found";
         then
             echo "Failed to install acme.sh, please manually run 'wget -O -  https://get.acme.sh/ | sh' to see the detailed error."
         else
-            acme.sh --upgrade --auto-upgrade
+            /home/$usr/.acme.sh/acme.sh --upgrade --auto-upgrade
             #install and turn on the auto upgrade for acme.sh
 
             echo "Choose the option you want to use to obtain the certificate :"
@@ -105,7 +102,7 @@ then
             sed -i s/!servername!/$servername/g /etc/nginx/nginx.conf
             sed -i s/!sitepath!/$sitepath/g /etc/nginx/nginx.conf
 
-            deploystate=$(acme.sh --issue --server letsencrypt --test -d $servername -w $sitepath --keylength ec-256)
+            deploystate=$(/home/$usr/.acme.sh/acme.sh --issue --server letsencrypt --test -d $servername -w $sitepath --keylength ec-256)
             echo $deploystate >> $installationpath/Hysteria/installation.log
 
             testoutcome=$(cat $installationpath/Hysteria/installation.log | grep 'error')
@@ -113,9 +110,9 @@ then
             then
                 echo "Failed to obtain the certificate, please check the log file for more details."
             else
-                acme.sh --set-default-ca --server letsencrypt
-                acme.sh --issue -d $servername -w $sitepath --keylength ec-256 --force
-                acme.sh --installcert -d $servername  --key-file /$certpath/$servername.key --fullchain-file /$certpath/$servername.crt --ecc
+                /home/$usr/.acme.sh/acme.sh --set-default-ca --server letsencrypt
+                /home/$usr/.acme.sh//acme.sh --issue -d $servername -w $sitepath --keylength ec-256 --force
+                /home/$usr/.acme.sh/acme.sh --installcert -d $servername  --key-file /$certpath/$servername.key --fullchain-file /$certpath/$servername.crt --ecc
             fi
 
             chmod +r /$certpath/$servername.key
