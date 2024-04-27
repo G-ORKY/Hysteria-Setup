@@ -93,7 +93,7 @@ then
             echo "Use the privious site to obtain a certificate"
         else
             rm -f /etc/nginx/nginx.conf
-            wget -P /etc/nginx/nginx.conf "https://raw.githubusercontent.com/G-ORKY/Proxy-server-initiallizer/main/nginx.conf"
+            wget -P /etc/nginx/ "https://raw.githubusercontent.com/G-ORKY/Proxy-server-initiallizer/main/nginx.conf"
         fi
 
         sleep 3
