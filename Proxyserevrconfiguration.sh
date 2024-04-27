@@ -118,9 +118,19 @@ then
 
             chmod +r /$certpath/$servername.key
 
-            sed -i s/!singbox-log/$logpath/g $installationpath/Hysteria/config/Hysteriaconfig.json
+            wget -P $certpath https://raw.githubusercontent.com/G-ORKY/Proxy-server-initiallizer/main/certrenew.sh
+            sed -i s#!homepath#home/$usr#g $certpath/certrenew.sh
+            sed -i s#!servername#$servername#g $certpath/certrenew.sh
+            sed -i s#!certpath#$certpath#g $certpath/certrenew.sh
+            sed -i s#!installationpath#$installationpath#g $certpath/certrenew.sh
+
+            chmod +x $certpath/certrenew.sh
 
             echo "Congratulations! All done! Please enter your password to start the sing-box. Feel free to use your proxy server!"
+            echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+            echo "Please remember to add the crontab to renew the certificate automatically, you can use the following command to add the crontab:"
+            echo "# 1:00am, 1st day each month, run `certrenew.sh`"
+            echo "0 1 1 * *   bash $certpath/certrenew.sh"
 
             sudo sing-box run -c $installationpath/config/Hysteriaconfig.json
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-!homepath/.acme.sh/acme.sh --install-cert -d !servername --ecc --fullchain-file !certpath/cert/!servername.crt --key-file !certpath/cert/!servername.key
+/!homepath/acme.sh --install-cert -d !servername --ecc --fullchain-file !certpath/cert/!servername.crt --key-file !certpath/cert/!servername.key
 
 
 chmod +r !certpath/!servername.key
