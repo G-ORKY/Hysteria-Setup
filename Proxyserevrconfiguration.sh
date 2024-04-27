@@ -49,7 +49,7 @@ then
 
         wget -P $installationpath/Hysteria/config/ https://raw.githubusercontent.com/G-ORKY/Proxy-server-initiallizer/main/Hysteriaconfig.json
         wget -P $installationpath/Hysteria/site/ https://raw.githubusercontent.com/G-ORKY/Proxy-server-initiallizer/main/re.html
-        chmod +777 $installationpath/Hysteria/site/re.html
+        sudo chmod +777 $installationpath/Hysteria/site/re.html
         #download the configuration file and the site to redirect to when hysteria authentication is failed
 
         echo "Choose the path you want to put your log file in, or leave it empty to use the default path($logpath):"
@@ -112,7 +112,7 @@ then
             /home/$usr/.acme.sh/acme.sh --installcert -d $servername  --key-file /$certpath/$servername.key --fullchain-file /$certpath/$servername.crt --ecc
         fi
 
-        chmod +r /$certpath/$servername.key
+        sudo chmod +r /$certpath/$servername.key
 
         wget -P $certpath https://raw.githubusercontent.com/G-ORKY/Proxy-server-initiallizer/main/certrenew.sh
         sed -i s#!homepath#home/$usr#g $certpath/certrenew.sh
@@ -120,7 +120,7 @@ then
         sed -i s#!certpath#$certpath#g $certpath/certrenew.sh
         sed -i s#!installationpath#$installationpath#g $certpath/certrenew.sh
 
-        chmod +x $certpath/certrenew.sh
+        sudo chmod +x $certpath/certrenew.sh
 
         echo "Congratulations! All done! Please enter your password to start the sing-box. Feel free to use your proxy server!"
         echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!"
