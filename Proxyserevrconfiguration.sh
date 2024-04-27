@@ -71,15 +71,18 @@ then
         acme.sh --upgrade --auto-upgrade
         #install and turn on the auto upgrade for acme.sh
 
-        # sed -i '/http{/a\server{' /etc/nginx/nginx.conf
-        # sed -i /http{/a\\listen 80;\ /etc/nginx/nginx.conf
-        # sed -i /http{/a\\server_name $servername;\ /etc/nginx/nginx.conf
-        # sed -i /http{/a\\root $sitepath;\ /etc/nginx/nginx.conf
-        # sed -i /http{/a\\index re.html;\ /etc/nginx/nginx.conf
-        # sed -i /http{/a\\} /etc/nginx/nginx.conf
+        echo "Choose the option you want to use to obtain the certificate :"
+        echo "1."I have the site privious run on this server!""
+        echo "2."I have the domain but it is not related to any site on this server and I AGREE to use the default site!""
+        echo " "
+        echo "Option 2 will replace the privious nginx.conf file, so if you have any custom configuration, please choose option 1 or make sure that you have the backup of the nginx.conf and you need to re-add your privious config after configuration!!!"
+        
+        read siteoption
+        if $siteoption==1
+            echo "Use the privious site to obtain a certificate"
+        else
+            wget
 
-        
-        
     else
         echo "This script is currently not supported on your OS, please contact us to request support for your OS."
     fi
