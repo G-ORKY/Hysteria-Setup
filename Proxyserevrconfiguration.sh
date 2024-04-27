@@ -98,8 +98,8 @@ then
 
         sleep 3
 
-        sed -i s/!servername!/$servername/g /etc/nginx/nginx.conf
-        sed -i s#!sitepath!/$sitepath#g /etc/nginx/nginx.conf
+        sed -i s#!servername!#$servername#g /etc/nginx/nginx.conf
+        sed -i s#!sitepath!#$sitepath#g /etc/nginx/nginx.conf
 
         deploystate=$(/home/$usr/.acme.sh/acme.sh --issue --server letsencrypt --test -d $servername -w $sitepath --keylength ec-256)
         echo $deploystate >> $installationpath/Hysteria/installation.log
