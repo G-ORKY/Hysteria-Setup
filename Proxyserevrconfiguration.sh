@@ -81,7 +81,7 @@ then
         if $siteoption==1
             echo "Use the privious site to obtain a certificate"
         else
-            wget
+            wget ""
 
     else
         echo "This script is currently not supported on your OS, please contact us to request support for your OS."
