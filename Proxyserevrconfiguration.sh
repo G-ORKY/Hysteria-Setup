@@ -95,6 +95,7 @@ then
             
             read siteoption
             if $siteoption=="1";
+            then
                 echo "Use the privious site to obtain a certificate"
             else
                 rm -f /etc/nginx/nginx.comf
@@ -109,6 +110,7 @@ then
 
             testoutcome=$(cat $installationpath/Hysteria/installation.log | grep 'error')
             if $testoutcome=="error";
+            then
                 echo "Failed to obtain the certificate, please check the log file for more details."
             else
                 acme.sh --set-default-ca --server letsencrypt
