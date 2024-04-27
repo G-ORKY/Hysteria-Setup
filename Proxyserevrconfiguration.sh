@@ -111,7 +111,7 @@ then
                 echo "Failed to obtain the certificate, please check the log file for more details."
             else
                 /home/$usr/.acme.sh/acme.sh --set-default-ca --server letsencrypt
-                /home/$usr/.acme.sh//acme.sh --issue -d $servername -w $sitepath --keylength ec-256 --force
+                /home/$usr/.acme.sh/acme.sh --issue -d $servername -w $sitepath --keylength ec-256 --force
                 /home/$usr/.acme.sh/acme.sh --installcert -d $servername  --key-file /$certpath/$servername.key --fullchain-file /$certpath/$servername.crt --ecc
             fi
 
