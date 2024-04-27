@@ -94,7 +94,7 @@ then
             echo "Option 2 will replace the privious nginx.conf file, so if you have any custom configuration, please choose option 1 or make sure that you have the backup of the nginx.conf and you need to re-add your privious config after configuration!!!"
             
             read siteoption
-            if $siteoption=="1";
+            if $siteoption=="1"
             then
                 echo "Use the privious site to obtain a certificate"
             else
