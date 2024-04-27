@@ -96,7 +96,7 @@ then
             wget -P /etc/nginx/nginx.conf "https://raw.githubusercontent.com/G-ORKY/Proxy-server-initiallizer/main/nginx.conf"
         fi
 
-        sleep 3s
+        sleep 3
 
         sed -i s/!servername!/$servername/g /etc/nginx/nginx.conf
         sed -i s/!sitepath!/$sitepath/g /etc/nginx/nginx.conf
