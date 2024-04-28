@@ -24,7 +24,7 @@ touch $installationpath/Hysteria/installation.log
 # btw installation.log can be manually deleted
 
 usrtype=$(whoami)
-if usrtype=="root";
+if $usrtype=="root";
 then
     version=$(cat /etc/*-release | grep -oP '(?<=^ID=).+' | tr -d '"')
     version_id=$(cat /etc/*-release | grep -oP '(?<=^VERSION_ID=).+' | tr -d '"')
@@ -94,12 +94,13 @@ then
         else
             rm -f /etc/nginx/nginx.conf
             wget -P /etc/nginx/ "https://raw.githubusercontent.com/G-ORKY/Proxy-server-initiallizer/main/nginx.conf"
+            sleep 3
+            sed -i "s/!servername!/"$servername"/g" /etc/nginx/nginx.conf
+            sed -i "s/!sitepath!/"$sitepath"/g" /etc/nginx/nginx.conf
+            sudo systemctl reload nginx
         fi
 
-        sleep 3
-
-        sed -i "s/!servername!/"$servername"/g" /etc/nginx/nginx.conf
-        sed -i "s/!sitepath!/"$sitepath"/g" /etc/nginx/nginx.conf
+        sudo chmod +777 $sitepath
 
         deploystate=$(/home/$usr/.acme.sh/acme.sh --issue --server letsencrypt --test -d $servername -w $sitepath --keylength ec-256)
         echo $deploystate >> $installationpath/Hysteria/installation.log
