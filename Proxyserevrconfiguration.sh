@@ -24,7 +24,8 @@ touch $installationpath/Hysteria/installation.log
 # btw installation.log can be manually deleted
 
 usrtype=$(whoami)
-if $usrtype=="root";
+echo $usrtype
+if [ "$usrtype"==root ];
 then
     version=$(cat /etc/*-release | grep -oP '(?<=^ID=).+' | tr -d '"')
     version_id=$(cat /etc/*-release | grep -oP '(?<=^VERSION_ID=).+' | tr -d '"')
@@ -96,7 +97,8 @@ then
             wget -P /etc/nginx/ "https://raw.githubusercontent.com/G-ORKY/Proxy-server-initiallizer/main/nginx.conf"
             sleep 3
             sed -i "s/!servername!/"$servername"/g" /etc/nginx/nginx.conf
-            sed -i "s/!sitepath!/"$sitepath"/g" /etc/nginx/nginx.conf
+            # sed -i "s/!sitepath!/"$sitepath"/g" /etc/nginx/nginx.conf
+            sed -i "s/!sitepath!/\"$sitepath\"/g" /etc/nginx/nginx.conf
             sudo systemctl reload nginx
         fi
 
@@ -113,25 +115,25 @@ then
             /home/$usr/.acme.sh/acme.sh --set-default-ca --server letsencrypt
             /home/$usr/.acme.sh/acme.sh --issue -d $servername -w $sitepath --keylength ec-256 --force
             /home/$usr/.acme.sh/acme.sh --installcert -d $servername  --key-file /$certpath/$servername.key --fullchain-file /$certpath/$servername.crt --ecc
+
+            sudo chmod +r /$certpath/$servername.key
+
+            wget -P $certpath https://raw.githubusercontent.com/G-ORKY/Proxy-server-initiallizer/main/certrenew.sh
+            sed -i s#!homepath#home/$usr#g $certpath/certrenew.sh
+            sed -i s#!servername#$servername#g $certpath/certrenew.sh
+            sed -i s#!certpath#$certpath#g $certpath/certrenew.sh
+            sed -i s#!installationpath#$installationpath#g $certpath/certrenew.sh
+
+            sudo chmod +x $certpath/certrenew.sh
+
+            echo "Congratulations! All done! Please enter your password to start the sing-box. Feel free to use your proxy server!"
+            echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+            echo "Please remember to add the crontab to renew the certificate automatically, you can use the following command to add the crontab:"
+            echo "# 1:00am, 1st day each month, run `certrenew.sh`"
+            echo "0 1 1 * *   bash $certpath/certrenew.sh"
+
+            sudo sing-box run -c $installationpath/config/Hysteriaconfig.json
         fi
-
-        sudo chmod +r /$certpath/$servername.key
-
-        wget -P $certpath https://raw.githubusercontent.com/G-ORKY/Proxy-server-initiallizer/main/certrenew.sh
-        sed -i s#!homepath#home/$usr#g $certpath/certrenew.sh
-        sed -i s#!servername#$servername#g $certpath/certrenew.sh
-        sed -i s#!certpath#$certpath#g $certpath/certrenew.sh
-        sed -i s#!installationpath#$installationpath#g $certpath/certrenew.sh
-
-        sudo chmod +x $certpath/certrenew.sh
-
-        echo "Congratulations! All done! Please enter your password to start the sing-box. Feel free to use your proxy server!"
-        echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-        echo "Please remember to add the crontab to renew the certificate automatically, you can use the following command to add the crontab:"
-        echo "# 1:00am, 1st day each month, run `certrenew.sh`"
-        echo "0 1 1 * *   bash $certpath/certrenew.sh"
-
-        sudo sing-box run -c $installationpath/config/Hysteriaconfig.json
 
     else
         echo "This script is currently not supported on your OS, please contact us to request support for your OS."
