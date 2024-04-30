@@ -40,8 +40,8 @@ then
     if [ $version = "ubuntu" ] || [ $version = "debian" ]; 
     then
         apt update
-        apt install nginx
-        apt upgrade curl && apt install curl
+        apt install nginx -y
+        apt upgrade curl && apt install curl -y
         #update basic modules
 
         bash <(curl -fsSL https://sing-box.app/deb-install.sh)
