@@ -68,7 +68,7 @@ then
         echo "Choose the path you want to put your log file in, or leave it empty to use the default path($logpath):"
         echo "--------------------------------------------------------------- "
         read logpath
-        if $logpath=="";
+        if [ $logpath=="" ];
         then
             $logpath=$installationpath/Hysteria/config/Hysteriaconfig.json
             sed -i s/!singbox-log/$logpath/g $installationpath/Hysteria/config/Hysteriaconfig.json
@@ -119,12 +119,12 @@ then
             sed -i "s/!servername!/"$servername"/g" /etc/nginx/nginx.conf
             # sed -i "s/!sitepath!/"$sitepath"/g" /etc/nginx/nginx.conf
             sed -i "s|!sitepath!|"$sitepath"|g" /etc/nginx/nginx.conf
-            sudo systemctl reload nginx
+            systemctl reload nginx
         fi
 
         sudo chmod +777 $sitepath
 
-        deploystate=$(/home/$usr/.acme.sh/acme.sh --issue --server letsencrypt --test -d $servername -w $sitepath --keylength ec-256)
+        deploystate=$(/home/$usr/.acme.sh/acme.sh --issue --server letsencrypt --test -d $servername -w $sitepath --keylength --force ec-256)
         echo $deploystate >> $installationpath/Hysteria/installation.log
 
         testoutcome=$(cat $installationpath/Hysteria/installation.log | grep 'error')
