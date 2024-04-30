@@ -128,7 +128,7 @@ then
         echo $deploystate >> $installationpath/Hysteria/installation.log
 
         testoutcome=$(cat $installationpath/Hysteria/installation.log | grep 'error')
-        if $testoutcome=="error";
+        if [ $testoutcome=="error" ];
         then
             echo "--------------------------------------------------------------- "
             echo "Failed to obtain the certificate, please check the log file for more details."
@@ -153,10 +153,13 @@ then
             echo "--------------------------------------------------------------- "
             echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!"
             echo "Please remember to add the crontab to renew the certificate automatically, you can use the following command to add the crontab:"
+            echo " "
+            echo "--------------------------------------------------------------- "
             echo "# 1:00am, 1st day each month, run `certrenew.sh`"
             echo "0 1 1 * *   bash $certpath/certrenew.sh"
+            echo "--------------------------------------------------------------- "
 
-            sudo sing-box run -c $installationpath/config/Hysteriaconfig.json
+            sudo sing-box run -c $installationpath/Hysteria/config/Hysteriaconfig.json
         fi
 
     else
