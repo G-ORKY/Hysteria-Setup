@@ -98,7 +98,7 @@ then
             sleep 3
             sed -i "s/!servername!/"$servername"/g" /etc/nginx/nginx.conf
             # sed -i "s/!sitepath!/"$sitepath"/g" /etc/nginx/nginx.conf
-            sed -i "s/!sitepath!/\"$sitepath\"/g" /etc/nginx/nginx.conf
+            sed -i "s|!sitepath!|"$sitepath"|g" /etc/nginx/nginx.conf
             sudo systemctl reload nginx
         fi
 
