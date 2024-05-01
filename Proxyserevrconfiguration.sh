@@ -98,7 +98,7 @@ then
 
         . .bashrc
 
-        /home/$usr/.acme.sh/acme.sh --upgrade --auto-upgrade
+        acme.sh --upgrade --auto-upgrade
         #install and turn on the auto upgrade for acme.sh
 
         echo "--------------------------------------------------------------- "
@@ -119,12 +119,12 @@ then
             sed -i "s/!servername!/"$servername"/g" /etc/nginx/nginx.conf
             # sed -i "s/!sitepath!/"$sitepath"/g" /etc/nginx/nginx.conf
             sed -i "s|!sitepath!|"$sitepath"|g" /etc/nginx/nginx.conf
-            systemctl reload nginx
+            sudo systemctl reload nginx
         fi
 
-        sudo chmod +777 $sitepath
+        chmod +777 $sitepath
 
-        deploystate=$(/home/$usr/.acme.sh/acme.sh --issue --server letsencrypt --test -d $servername -w $sitepath --keylength --force ec-256)
+        deploystate=$(acme.sh --issue --server letsencrypt --test -d $servername -w $sitepath --keylength --force ec-256)
         echo $deploystate >> $installationpath/Hysteria/installation.log
 
         testoutcome=$(cat $installationpath/Hysteria/installation.log | grep 'error')
@@ -134,9 +134,9 @@ then
             echo "Failed to obtain the certificate, please check the log file for more details."
             echo "--------------------------------------------------------------- "
         else
-            /home/$usr/.acme.sh/acme.sh --set-default-ca --server letsencrypt
-            /home/$usr/.acme.sh/acme.sh --issue -d $servername -w $sitepath --keylength ec-256 --force
-            /home/$usr/.acme.sh/acme.sh --installcert -d $servername  --key-file /$certpath/$servername.key --fullchain-file /$certpath/$servername.crt --ecc
+            acme.sh --set-default-ca --server letsencrypt
+            acme.sh --issue -d $servername -w $sitepath --keylength ec-256 --force
+            acme.sh --installcert -d $servername  --key-file /$certpath/$servername.key --fullchain-file /$certpath/$servername.crt --ecc
 
             sudo chmod +r /$certpath/$servername.key
 
