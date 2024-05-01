@@ -7,16 +7,19 @@ echo "--------------------------------------------------------------- "
 echo "Please type the path that you want to install and set up sing-box in:"
 echo "--------------------------------------------------------------- "
 read installationpath
+echo " "
 
 echo "--------------------------------------------------------------- "
 echo "Please type the domain used on this server as the proxy server name:"
 echo "--------------------------------------------------------------- "
 read servername
+echo " "
 
 echo "--------------------------------------------------------------- "
 echo "Please type the user you want use for installation:"
 echo "--------------------------------------------------------------- "
 read usr
+echo " "
 homepath="/home/$usr"
 
 rm -r $installationpath/Hysteria #remove the previous installation if exists
@@ -87,7 +90,9 @@ then
         sed -i s/!usrname/$username/g $installationpath/Hysteria/config/Hysteriaconfig.json
         #set the username in the configuration file
 
+        echo "--------------------------------------------------------------- "
         echo "Enterthe password you want to use:"
+        echo "--------------------------------------------------------------- "
         read password
         sed -i s/!usrpassword/$password/g $installationpath/Hysteria/config/Hysteriaconfig.json
 
@@ -124,16 +129,16 @@ then
 
         chmod +777 $sitepath
 
-        deploystate=$(/root/.acme.sh/acme.sh --issue --server letsencrypt --test -d $servername -w $sitepath --keylength ec-256 --force)
+        deploystate=$(/root/.acme.sh/acme.sh --issue --server letsencrypt --test -d $servername -w $sitepath --keylength ec-256)
         echo $deploystate >> $installationpath/Hysteria/installation.log
 
         testoutcome=$(cat $installationpath/Hysteria/installation.log | grep 'error')
-        if [ $testoutcome=="error" ];
-        then
-            echo "--------------------------------------------------------------- "
-            echo "Failed to obtain the certificate, please check the log file for more details."
-            echo "--------------------------------------------------------------- "
-        else
+        # if [ $testoutcome=="error" ];
+        # then
+        #     echo "--------------------------------------------------------------- "
+        #     echo "Failed to obtain the certificate, please check the log file for more details."
+        #     echo "--------------------------------------------------------------- "
+        # else
             /root/.acme.sh/acme.sh --set-default-ca --server letsencrypt
             /root/.acme.sh/acme.sh --issue -d $servername -w $sitepath --keylength ec-256 --force
             /root/.acme.sh/acme.sh --installcert -d $servername  --key-file /$certpath/$servername.key --fullchain-file /$certpath/$servername.crt --ecc
