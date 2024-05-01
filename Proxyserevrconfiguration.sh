@@ -124,7 +124,7 @@ then
 
         chmod +777 $sitepath
 
-        deploystate=$(/root/.acme.sh/acme.sh --issue --server letsencrypt --test -d $servername -w $sitepath --keylength --force ec-256)
+        deploystate=$(/root/.acme.sh/acme.sh --issue --server letsencrypt --test -d $servername -w $sitepath --keylength ec-256 --force)
         echo $deploystate >> $installationpath/Hysteria/installation.log
 
         testoutcome=$(cat $installationpath/Hysteria/installation.log | grep 'error')
