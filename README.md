@@ -8,3 +8,6 @@ Or you can choose the option that you do not need to use the auto page set-up fu
 Btw, this script is temporary for single-user setup.
 
 For more functions you wish to add to this script, feel free to contribute to this project or contact our contributers.
+
+auto cert renew will be added recently!
+port leap will be added recently!
