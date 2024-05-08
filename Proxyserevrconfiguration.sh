@@ -144,8 +144,8 @@ then
             /root/.acme.sh/acme.sh --installcert -d $servername  --key-file /$certpath/$servername.key --fullchain-file /$certpath/$servername.crt --ecc
 
             sudo chmod +r /$certpath/$servername.key
-            sed -i s#!keypath#$certpath/$servername.key#g $installationpath/Hysteria/config/Hysteriaconfig.json
-            sed -i s#!fullchainpath#$certpath/$servername.crt#g $installationpath/Hysteria/config/Hysteriaconfig.json
+            sed -i "s|!keypath|"$certpath"|"$servername".key|g" $installationpath/Hysteria/config/Hysteriaconfig.json
+            sed -i "s|!fullchainpath|"$certpath"/"$servername".crt|g" $installationpath/Hysteria/config/Hysteriaconfig.json
 
             wget -P $certpath https://raw.githubusercontent.com/G-ORKY/Proxy-server-initiallizer/main/certrenew.sh
             sed -i s#!homepath#home/$usr#g $certpath/certrenew.sh
