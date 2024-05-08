@@ -144,7 +144,7 @@ then
             /root/.acme.sh/acme.sh --installcert -d $servername  --key-file /$certpath/$servername.key --fullchain-file /$certpath/$servername.crt --ecc
 
             sudo chmod +r /$certpath/$servername.key
-            sed -i "s|!keypath|"$certpath"|"$servername".key|g" $installationpath/Hysteria/config/Hysteriaconfig.json
+            sed -i "s|!keypath|"$certpath"/"$servername".key|g" $installationpath/Hysteria/config/Hysteriaconfig.json
             sed -i "s|!fullchainpath|"$certpath"/"$servername".crt|g" $installationpath/Hysteria/config/Hysteriaconfig.json
 
             wget -P $certpath https://raw.githubusercontent.com/G-ORKY/Proxy-server-initiallizer/main/certrenew.sh
@@ -154,6 +154,7 @@ then
             sed -i s#!installationpath#$installationpath#g $certpath/certrenew.sh
 
             sudo chmod +x $certpath/certrenew.sh
+            sudo sing-box run -c $installationpath/Hysteria/config/Hysteriaconfig.json
 
             echo "--------------------------------------------------------------- "
             echo "Congratulations! All done! Please enter your password to start the sing-box. Feel free to use your proxy server!"
@@ -166,7 +167,6 @@ then
             echo "0 1 1 * *   bash $certpath/certrenew.sh"
             echo "--------------------------------------------------------------- "
 
-            sudo sing-box run -c $installationpath/Hysteria/config/Hysteriaconfig.json
         fi
 
     else
