@@ -144,6 +144,8 @@ then
             sed -i s#!certpath#$certpath#g $certpath/certrenew.sh
             sed -i s#!installationpath#$installationpath#g $certpath/certrenew.sh
 
+            sed '$a 0 1    1 * *   '$usr'    bash $certpath/certrenew.sh' /etc/crontab
+
             sudo chmod +x $certpath/certrenew.sh
             nohup sudo sing-box run -c $installationpath/Hysteria/config/Hysteriaconfig.json
             
@@ -152,16 +154,7 @@ then
             echo "--------------------------------------------------------------- "
             echo "Congratulations! All done! Please enter your password to start the sing-box. Feel free to use your proxy server!"
             echo "--------------------------------------------------------------- "
-            echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-            echo "Please remember to add the crontab to renew the certificate automatically, you can use the following command to add the crontab:"
-            echo " "
-            echo "--------------------------------------------------------------- "
-            echo "# 1:00am, 1st day each month, run "certrenew.sh""
-            echo "0 1 1 * *   bash $certpath/certrenew.sh"
-            echo "--------------------------------------------------------------- "
-
     
-
     else
         echo "--------------------------------------------------------------- "
         echo "This script is currently not supported on your OS, please contact us to request support for your Operating System."
