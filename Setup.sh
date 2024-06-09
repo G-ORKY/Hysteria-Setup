@@ -67,21 +67,11 @@ then
         #download the configuration file and the site to redirect to when hysteria authentication is failed
         echo "fetched basic web components for hysteria config and fallback site" \n >> ~/Hysteria/installation.log
 
-        echo "--------------------------------------------------------------- "
-        echo "Choose the path you want to put your log file in, or leave it empty to use the default path($logpath):"
-        echo "--------------------------------------------------------------- "
-        read logpath
-        if [ $logpath=="" ];
-        then
-            $logpath=$installationpath/Hysteria/config/Hysteriaconfig.json
-            sed -i s/!singbox-log/$logpath/g $installationpath/Hysteria/config/Hysteriaconfig.json
-            #set the log path in the configuration file
-        else
-            sed -i s/!singbox-log/$logpath/g $installationpath/Hysteria/config/Hysteriaconfig.json
-            #set the log path in the configuration file
-        fi
+        $logpath=$installationpath/Hysteria/config/Hysteriaconfig.json
+        sed -i s/!singbox-log/$logpath/g $installationpath/Hysteria/config/Hysteriaconfig.json
+        #set the log path in the configuration file
 
-        echo "sing-box log path has been set" \n >> ~/Hysteria/installation.log
+        echo "sing-box log path has been set" \n >> $installationpath/Hysteria/installation.log
 
         echo "--------------------------------------------------------------- "
         echo "Choose username you want to use:"
@@ -155,6 +145,8 @@ then
 
             sudo chmod +x $certpath/certrenew.sh
             sudo sing-box run -c $installationpath/Hysteria/config/Hysteriaconfig.json
+            
+            sudo iptables -t nat -A PREROUTING -i eth0 -p udp --dport 3000:30000 -j DNAT --to-destination :443
 
             echo "--------------------------------------------------------------- "
             echo "Congratulations! All done! Please enter your password to start the sing-box. Feel free to use your proxy server!"
@@ -163,11 +155,11 @@ then
             echo "Please remember to add the crontab to renew the certificate automatically, you can use the following command to add the crontab:"
             echo " "
             echo "--------------------------------------------------------------- "
-            echo "# 1:00am, 1st day each month, run `certrenew.sh`"
+            echo "# 1:00am, 1st day each month, run "certrenew.sh""
             echo "0 1 1 * *   bash $certpath/certrenew.sh"
             echo "--------------------------------------------------------------- "
 
-        fi
+    
 
     else
         echo "--------------------------------------------------------------- "
