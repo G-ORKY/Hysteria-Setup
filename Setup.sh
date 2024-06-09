@@ -48,13 +48,14 @@ then
     #version=$(cat /proc/version)
     # sed a\ $version ~/Hysteria/installation.log
 
-    echo $version+$version_id \n >> ~/Hysteria/installation.log
+    echo $version+$version_id \n >> $installationpath/Hysteria/installation.log
 
     if [ $version = "ubuntu" ] || [ $version = "debian" ]; 
     then
         apt update
         apt install nginx -y
         apt upgrade curl && apt install curl -y
+        apt upgrade iptables && apt install iptables -y
         #update basic modules
 
         bash <(curl -fsSL https://sing-box.app/deb-install.sh)
@@ -86,7 +87,7 @@ then
         read password
         sed -i s/!usrpassword/$password/g $installationpath/Hysteria/config/Hysteriaconfig.json
 
-        echo "User information has been set" \n >> ~/Hysteria/installation.log
+        echo "User information has been set" \n >> $installationpath/Hysteria/installation.log
         #set the password in the configuration file
 
         wget -P /home/$usr -O -  https://get.acme.sh | sh
@@ -144,7 +145,7 @@ then
             sed -i s#!installationpath#$installationpath#g $certpath/certrenew.sh
 
             sudo chmod +x $certpath/certrenew.sh
-            sudo sing-box run -c $installationpath/Hysteria/config/Hysteriaconfig.json
+            nohup sudo sing-box run -c $installationpath/Hysteria/config/Hysteriaconfig.json
             
             sudo iptables -t nat -A PREROUTING -i eth0 -p udp --dport 3000:30000 -j DNAT --to-destination :443
 
