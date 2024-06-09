@@ -144,7 +144,7 @@ then
             sed -i s#!certpath#$certpath#g $certpath/certrenew.sh
             sed -i s#!installationpath#$installationpath#g $certpath/certrenew.sh
 
-            sed '$a 0 1    1 * *   '$usr'    bash $certpath/certrenew.sh' /etc/crontab
+            sed '$a 0 1    1 * *   '$usr'    bash '$certpath'/certrenew.sh' /etc/crontab
 
             sudo chmod +x $certpath/certrenew.sh
             nohup sudo sing-box run -c $installationpath/Hysteria/config/Hysteriaconfig.json
