@@ -171,7 +171,7 @@ then
 
     else
         echo "--------------------------------------------------------------- "
-        echo "This script is currently not supported on your OS, please contact us to request support for your OS."
+        echo "This script is currently not supported on your OS, please contact us to request support for your Operating System."
         echo "--------------------------------------------------------------- "
     fi
 else
